@@ -1,0 +1,12 @@
+import type { FeeInvoice, FeeStructureItem } from "../lib/types";
+import { supabase, supabaseConfigured } from "../lib/supabase";
+
+type StructureRow={id:string;class_id:string;title:string;amount:number;frequency:FeeStructureItem["frequency"]};
+type InvoiceRow={id:string;receipt_no:string;student_id:string;title:string;amount:number;paid_amount:number;due_date:string;paid_date:string|null;method:FeeInvoice["method"];status:FeeInvoice["status"]};
+const structure=(r:StructureRow):FeeStructureItem=>({id:r.id,classId:r.class_id,title:r.title,amount:r.amount,frequency:r.frequency});
+const invoice=(r:InvoiceRow):FeeInvoice=>({id:r.id,receiptNo:r.receipt_no,studentId:r.student_id,title:r.title,amount:r.amount,paidAmount:r.paid_amount,dueDate:r.due_date,paidDate:r.paid_date,method:r.method,status:r.status});
+export async function listFeeStructures(){if(!supabaseConfigured||!supabase)return[];const{data,error}=await supabase.from("fee_structure").select("*").order("title");if(error)throw error;return(data as StructureRow[]).map(structure)}
+export async function listFeeInvoices(){if(!supabaseConfigured||!supabase)return[];const{data,error}=await supabase.from("fee_invoices").select("*").order("due_date",{ascending:false});if(error)throw error;return(data as InvoiceRow[]).map(invoice)}
+export async function createFeeInvoice(input:Omit<FeeInvoice,"id">){if(!supabaseConfigured||!supabase)throw new Error("Supabase is not configured");const row={receipt_no:input.receiptNo,student_id:input.studentId,title:input.title,amount:input.amount,paid_amount:input.paidAmount,due_date:input.dueDate,paid_date:input.paidDate,method:input.method,status:input.status};const{data,error}=await supabase.from("fee_invoices").insert(row).select("*").single();if(error)throw error;return invoice(data as InvoiceRow)}
+export async function updateFeeInvoice(id:string,input:Omit<FeeInvoice,"id">){if(!supabaseConfigured||!supabase)throw new Error("Supabase is not configured");const row={receipt_no:input.receiptNo,student_id:input.studentId,title:input.title,amount:input.amount,paid_amount:input.paidAmount,due_date:input.dueDate,paid_date:input.paidDate,method:input.method,status:input.status};const{data,error}=await supabase.from("fee_invoices").update(row).eq("id",id).select("*").single();if(error)throw error;return invoice(data as InvoiceRow)}
+export async function deleteFeeInvoice(id:string){if(!supabaseConfigured||!supabase)throw new Error("Supabase is not configured");const{error}=await supabase.from("fee_invoices").delete().eq("id",id);if(error)throw error}
