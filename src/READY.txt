@@ -1,0 +1,1 @@
+Full school-management implementation is being wired into the application entry point on the Codex development branch.
