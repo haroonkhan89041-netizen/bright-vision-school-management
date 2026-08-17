@@ -16,7 +16,7 @@ export function useAuth() {
       if (mounted) setLoading(false);
     });
 
-    const subscription = onAuthStateChange((_event, nextSession) => {
+    const subscription = onAuthStateChange(async (_event, nextSession) => {
       if (mounted) setSession(nextSession);
     });
     return () => {
