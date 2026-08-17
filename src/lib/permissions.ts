@@ -27,6 +27,7 @@ const permissions: Record<Role, Permission[]> = {
     "attendance.view","attendance.manage","exams.view","exams.manage","timetable.view","notices.view","reports.view",
   ],
   accountant: ["dashboard.view","students.view","fees.view","fees.manage","reports.view"],
+  staff: ["dashboard.view","students.view","teachers.view","classes.view","subjects.view","attendance.view","fees.view","exams.view","timetable.view","notices.view","reports.view"],
   student: ["dashboard.view","students.view","subjects.view","attendance.view","fees.view","exams.view","timetable.view","notices.view"],
   parent: ["dashboard.view","students.view","attendance.view","fees.view","exams.view","timetable.view","notices.view"],
 };
