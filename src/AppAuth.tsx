@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import App from "./App";
+import AppFull from "./AppFull";
 import { AuthStatus } from "./components/AuthStatus";
 import { SupabaseLogin } from "./components/SupabaseLogin";
 import { supabaseConfigured, supabase } from "./lib/supabase";
@@ -9,7 +9,6 @@ function AuthenticatedApp() {
 
   useEffect(() => {
     let active = true;
-
     const loadUser = async () => {
       try {
         const { data, error } = await supabase!.auth.getUser();
@@ -30,16 +29,15 @@ function AuthenticatedApp() {
         if (active) setReady(true);
       }
     };
-
     void loadUser();
     return () => { active = false; };
   }, []);
 
   if (!ready) return <div className="min-h-screen grid place-items-center">Loading...</div>;
-  return <App />;
+  return <AppFull />;
 }
 
 export default function AppAuth() {
-  if (!supabaseConfigured) return <App />;
+  if (!supabaseConfigured) return <AppFull />;
   return <AuthStatus fallback={<SupabaseLogin />}><AuthenticatedApp /></AuthStatus>;
 }
